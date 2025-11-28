@@ -11,7 +11,7 @@ const shopSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    adress: {
+    address: {
       type: String,
       required: true,
     },
@@ -19,12 +19,20 @@ const shopSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    products: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-      },
-    ],
+    description: {
+      type: String,
+      default: '',
+    },
+    status: {
+      type: String,
+      enum: ['open', 'closed', 'pending'],
+      default: 'pending',
+    },
+    logo: {
+      type: String,
+      required: true,
+    },
+    rating: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

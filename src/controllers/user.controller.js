@@ -22,6 +22,22 @@ const createUserController = async (req, res) => {
   }
 };
 
+const updateUserController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const user = await userService.updateUserService(id, updateData);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message || 'Error update user',
+    });
+  }
+};
+
 export default {
   createUserController,
+  updateUserController,
 };

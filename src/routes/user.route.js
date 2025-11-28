@@ -10,4 +10,10 @@ router.post(
   userController.createUserController,
 );
 
+router.put(
+  '/:id',
+  validation.updateUserValidation,
+  userController.updateUserController,
+);
+
 export default router;

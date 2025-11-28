@@ -12,7 +12,9 @@ const updateUserValidate = {
   body: Joi.object({
     email: Joi.string().email(),
     password: Joi.string().min(6),
-  }).min(1),
+  })
+    .min(1)
+    .unknown(true), // <--- Cho phép các field khác
 };
 
 const loginValidate = {

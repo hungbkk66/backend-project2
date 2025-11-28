@@ -1,21 +1,7 @@
 import Product from '../models/product.model.js';
 
-const createProduct = async ({
-  name,
-  imageUrl,
-  description,
-  price,
-  category,
-  stock,
-}) => {
-  const product = await Product.create({
-    name,
-    imageUrl,
-    description,
-    price,
-    category,
-    stock,
-  });
+const createProduct = async (productData) => {
+  const product = await Product.create(productData);
   return product;
 };
 
@@ -28,10 +14,14 @@ const findByName = async (name) => {
 };
 
 const updateProduct = async (id, updateData) => {
-  // Implementation for updating a product can be added here
+  const product = await Product.findByIdAndUpdate(id, updateData, {
+    new: true,
+  });
+  return product;
 };
 const deleteProduct = async (id) => {
-  // Implementation for deleting a product can be added here
+  const product = await Product.findByIdAndDelete(id);
+  return product;
 };
 
 export default {

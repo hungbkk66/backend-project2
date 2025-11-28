@@ -15,9 +15,17 @@ const createUserService = async (userData) => {
 };
 
 const updateUserService = async (userId, updateData) => {
+  // Nếu đang update password → hash lại
+  if (updateData.password) {
+    const salt = await bcrypt.genSalt(10);
+    updateData.password = await bcrypt.hash(updateData.password, salt);
+  }
+
   const user = await userDao.updateUser(userId, updateData);
+
   const userObj = user.toObject ? user.toObject() : user;
   delete userObj.password;
+
   return userObj;
 };
 
