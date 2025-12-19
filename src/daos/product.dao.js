@@ -5,11 +5,8 @@ const createProduct = async (productData) => {
   return product;
 };
 
-//find product by name
-const findByName = async (name) => {
-  const product = await Product.find({
-    name: { $regex: name, $options: 'i' }, // i = case-insensitive
-  });
+const findById = async (id) => {
+  const product = await Product.findById(id);
   return product;
 };
 
@@ -24,9 +21,15 @@ const deleteProduct = async (id) => {
   return product;
 };
 
+const findByShopId = async (shopId) => {
+  const products = await Product.find({ shop: shopId });
+  return products;
+};
+
 export default {
   createProduct,
-  findByName,
+  findById,
   updateProduct,
   deleteProduct,
+  findByShopId,
 };

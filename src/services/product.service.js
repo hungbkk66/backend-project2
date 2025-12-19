@@ -15,8 +15,14 @@ const deleteProductService = async (id) => {
   return product;
 };
 
+const getProductsByShopId = async (shopId) => {
+  const products = await productDao.findByShopId(shopId);
+  return products;
+};
+
 export default {
   createProductService,
   updateProductService,
   deleteProductService,
+  getProductsByShopId,
 };
