@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 import User from '../models/user.model.js';
 const { ObjectId } = mongoose.Types;
 
-const createUser = async ({ name, email, password, profilePic }) => {
-  const user = await User.create({ name, email, password, profilePic });
+const createUser = async ({ name, email, password, phone, profilePic }) => {
+  const user = await User.create({ name, email, password, phone, profilePic });
   return user;
 };
 

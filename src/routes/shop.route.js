@@ -5,7 +5,12 @@ import { protectRoute } from '../middlewares/protectRoute.js';
 
 const router = express.Router();
 
-router.post('/', upload.single('image'), shopController.createShopController);
+router.post(
+  '/',
+  protectRoute,
+  upload.single('image'),
+  shopController.createShopController,
+);
 router.get('/search', shopController.searchShopsController);
 router.put(
   '/:id',

@@ -11,6 +11,7 @@ import categoryRoute from './routes/category.route.js';
 import { v2 as cloudinary } from 'cloudinary';
 import productRoute from './routes/product.route.js';
 import cartRoute from './routes/cart.route.js';
+import orderRoute from './routes/order.route.js';
 
 const app = express();
 const PORT = process.env.PORT || 3678;
@@ -36,7 +37,8 @@ app.use('/api/shops', shopRoute);
 app.use('/api/categories', categoryRoute);
 app.use('/api/products', productRoute);
 app.use('/api/shops', shopRoute);
-app.use('/api/carts', cartRoute);
+app.use('/api/cart', cartRoute);
+app.use('/api/orders', orderRoute);
 
 app.use(errorHandler);
 

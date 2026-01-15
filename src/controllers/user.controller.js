@@ -10,6 +10,7 @@ const createUserController = async (req, res) => {
       name,
       email,
       password,
+      phone,
       profilePic: randomAvatar,
     });
     const token = await authService.createToken(user._id);

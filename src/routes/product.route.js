@@ -20,4 +20,21 @@ router.get('/me', protectRoute, productController.getMyProductsController);
 
 router.delete('/:id', protectRoute, productController.deleteProductController);
 
+router.get('/search', productController.searchProductsController);
+
+router.get('/:id', productController.getProductDetailController);
+
+router.post('/rate/:productId', protectRoute, productController.rateProduct);
+
+router.get('/sort/top-expensive', productController.getTopExpensiveProducts);
+
+router.get('/sort/top-cheapest', productController.getTopCheapestProducts);
+
+router.get(
+  '/category/:categoryName',
+  productController.getProductsByCategoryName,
+);
+
+router.get('/sort/top-rated', productController.getTopRatedProducts);
+
 export default router;

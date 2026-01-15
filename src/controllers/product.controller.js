@@ -87,9 +87,149 @@ const deleteProductController = async (req, res) => {
   }
 };
 
+const searchProductsController = async (req, res) => {
+  try {
+    // Lấy keyword và category từ query URL (?keyword=abc&category=laptop)
+    const { keyword, category } = req.query;
+
+    const products = await productService.searchProducts({
+      keyword,
+      category, // Truyền đúng tên biến
+    });
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      products,
+    });
+  } catch (error) {
+    console.error('Search products error:', error);
+    res.status(500).json({ success: false, message: 'Đã xảy ra lỗi server' });
+  }
+};
+
+const getProductDetailController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await productService.getProductById(id);
+
+    res.status(200).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const rateProduct = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { star } = req.body;
+    const userId = req.user._id;
+
+    if (!star || star < 1 || star > 5) {
+      return res.status(400).json({
+        message: 'Star must be between 1 and 5',
+      });
+    }
+
+    const rating = await productService.rateProduct({
+      productId,
+      userId,
+      star,
+    });
+
+    res.status(200).json({
+      message: 'Rating successful',
+      rating,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+const getTopExpensiveProducts = async (req, res) => {
+  try {
+    const products = await productService.getTopExpensiveProducts();
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get expensive products',
+    });
+  }
+};
+
+const getTopCheapestProducts = async (req, res) => {
+  try {
+    const products = await productService.getTopCheapestProducts();
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get cheapest products',
+    });
+  }
+};
+
+const getProductsByCategoryName = async (req, res) => {
+  try {
+    const { categoryName } = req.params;
+
+    const products =
+      await productService.getProductsByCategoryName(categoryName);
+
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get products by category',
+    });
+  }
+};
+
+const getTopRatedProducts = async (req, res) => {
+  try {
+    const products = await productService.getTopRatedProducts();
+
+    return res.json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export default {
   createProductController,
   updateProductController,
   getMyProductsController,
   deleteProductController,
+  searchProductsController,
+  getProductDetailController,
+  rateProduct,
+  getTopExpensiveProducts,
+  getTopCheapestProducts,
+  getProductsByCategoryName,
+  getTopRatedProducts,
 };

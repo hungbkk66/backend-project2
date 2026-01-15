@@ -28,6 +28,12 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
+    shop: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Shop',
+      required: true,
+    },
+
     items: {
       type: [orderItemSchema],
       required: true,
@@ -36,35 +42,18 @@ const orderSchema = new mongoose.Schema(
 
     shippingCost: {
       type: Number,
-      default: 0,
-    },
-
-    payment: {
-      method: {
-        type: String,
-        enum: ['COD', 'MOMO', 'demo'],
-        default: 'COD',
-      },
-      status: {
-        type: String,
-        enum: ['pending', 'paid', 'failed'],
-        default: 'pending',
-      },
-      transactionId: {
-        type: String, // chỉ dùng nếu UAT trả về transactionId
-        default: '',
-      },
-    },
-
-    status: {
-      type: String,
-      enum: ['pending', 'confirmed', 'shipping', 'delivered', 'canceled'],
-      default: 'pending',
+      default: 30000, // 30k / shop
     },
 
     totalPrice: {
       type: Number,
       required: true,
+    },
+
+    status: {
+      type: String,
+      enum: ['pending', 'confirmed', 'delivered', 'canceled'],
+      default: 'pending',
     },
   },
   { timestamps: true },

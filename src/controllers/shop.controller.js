@@ -4,14 +4,21 @@ import cloudinaryUtils from '../configs/cloudinary.js';
 const createShopController = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: 'Ảnh sản phẩm là bắt buộc' });
+      return res.status(400).json({ message: 'Ảnh shop là bắt buộc' });
     }
+
     const imageUrl = await cloudinaryUtils.uploadImage(req.file);
+
     const shop = await shopService.createShopService({
       ...req.body,
+      owner: req.user._id,
       logo: imageUrl,
     });
-    res.status(201).json(shop);
+
+    res.status(201).json({
+      success: true,
+      data: shop,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Đã xảy ra lỗi' });

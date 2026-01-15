@@ -16,8 +16,13 @@ const updateCart = async (cartId, updateData) => {
   return await Cart.findByIdAndUpdate(cartId, updateData, { new: true });
 };
 
+const saveCart = (cart) => {
+  return cart.save();
+};
+
 export default {
   findCartByUser,
   createCart,
   updateCart,
+  saveCart,
 };
