@@ -24,7 +24,7 @@ router.get('/search', productController.searchProductsController);
 
 router.get('/:id', productController.getProductDetailController);
 
-router.post('/rate/:productId', protectRoute, productController.rateProduct);
+router.post('/rate', protectRoute, productController.rateProduct);
 
 router.get('/sort/top-expensive', productController.getTopExpensiveProducts);
 

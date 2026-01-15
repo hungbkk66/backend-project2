@@ -128,28 +128,33 @@ const getProductDetailController = async (req, res) => {
 
 const rateProduct = async (req, res) => {
   try {
-    const { productId } = req.params;
-    const { star } = req.body;
     const userId = req.user._id;
+    // Chỉ lấy star, bỏ comment
+    const { productId, orderId, star } = req.body;
 
-    if (!star || star < 1 || star > 5) {
+    if (!productId || !orderId || !star) {
       return res.status(400).json({
-        message: 'Star must be between 1 and 5',
+        success: false,
+        message: 'Thiếu thông tin đánh giá (productId, orderId, star)',
       });
     }
 
-    const rating = await productService.rateProduct({
-      productId,
+    const updatedProduct = await productService.addProductRating({
       userId,
+      productId,
+      orderId,
       star,
     });
 
     res.status(200).json({
-      message: 'Rating successful',
-      rating,
+      success: true,
+      message: 'Đánh giá thành công',
+      product: updatedProduct,
     });
   } catch (error) {
+    console.error('Rating error:', error);
     res.status(400).json({
+      success: false,
       message: error.message,
     });
   }

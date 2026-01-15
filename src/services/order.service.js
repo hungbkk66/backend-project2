@@ -93,7 +93,13 @@ const getShopOrders = async (userId) => {
 
 const updateOrderStatus = async (orderId, status) => {
   // 1. Kiểm tra status có nằm trong danh sách cho phép không
-  const validStatuses = ['pending', 'confirmed', 'delivered', 'canceled'];
+  const validStatuses = [
+    'pending',
+    'confirmed',
+    'delivered',
+    'canceled',
+    'received',
+  ];
   if (!validStatuses.includes(status)) {
     throw new Error('Trạng thái không hợp lệ');
   }

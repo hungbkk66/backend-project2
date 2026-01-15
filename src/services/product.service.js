@@ -1,5 +1,7 @@
 import productDao from '../daos/product.dao.js';
 import categoryDao from '../daos/category.dao.js';
+import Product from '../models/product.model.js';
+import orderDao from '../daos/order.dao.js';
 
 const createProductService = async (productData) => {
   const product = await productDao.createProduct(productData);
@@ -121,6 +123,57 @@ const getTopRatedProducts = async () => {
   return await productDao.findTopRatedProducts();
 };
 
+const addProductRating = async ({ userId, productId, orderId, star }) => {
+  // 1. Kiểm tra đơn hàng có tồn tại và đã nhận hàng chưa
+  const order = await orderDao.findOrderById(orderId);
+  if (!order) throw new Error('Đơn hàng không tồn tại');
+
+  if (order.owner.toString() !== userId.toString()) {
+    throw new Error('Bạn không có quyền đánh giá đơn hàng này');
+  }
+
+  if (order.status !== 'received') {
+    throw new Error('Bạn chỉ có thể đánh giá sau khi đã xác nhận nhận hàng');
+  }
+
+  // 2. Tìm sản phẩm
+  const product = await Product.findById(productId);
+  if (!product) throw new Error('Sản phẩm không tồn tại');
+
+  // 3. Kiểm tra xem user này đã đánh giá sản phẩm này chưa
+  const existingRatingIndex = product.rating.users.findIndex(
+    (r) => r.user.toString() === userId.toString(),
+  );
+
+  if (existingRatingIndex !== -1) {
+    // A. Nếu đã đánh giá rồi -> Cập nhật lại số sao
+    product.rating.users[existingRatingIndex].star = star;
+  } else {
+    // B. Nếu chưa -> Thêm đánh giá mới (chỉ user và star)
+    product.rating.users.push({
+      user: userId,
+      star: star,
+    });
+  }
+
+  // 4. Tính toán lại Average Rating và Count
+  const totalStars = product.rating.users.reduce(
+    (acc, item) => acc + item.star,
+    0,
+  );
+  const reviewCount = product.rating.users.length;
+
+  product.rating.count = reviewCount;
+  // Tính trung bình, làm tròn 1 số lẻ (VD: 4.5)
+  product.rating.average =
+    reviewCount === 0 ? 0 : Number((totalStars / reviewCount).toFixed(1));
+
+  // 5. Lưu lại Product
+  await product.save();
+
+  return product;
+};
+
 export default {
   createProductService,
   updateProductService,
@@ -133,4 +186,5 @@ export default {
   getTopCheapestProducts,
   getProductsByCategoryName,
   getTopRatedProducts,
+  addProductRating,
 };
